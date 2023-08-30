@@ -39,21 +39,21 @@ function writeJson(fileName, object) {
 }
 
 function verifyNoTypeScript() {
-  const typescriptFiles = globby(
-    ['**/*.(ts|tsx)', '!**/node_modules', '!**/*.d.ts'],
-    { cwd: paths.appSrc }
-  );
-  if (typescriptFiles.length > 0) {
-    console.warn(
-      chalk.yellow(
-        `We detected TypeScript in your project (${chalk.bold(
-          `src${path.sep}${typescriptFiles[0]}`
-        )}) and created a ${chalk.bold('tsconfig.json')} file for you.`
-      )
-    );
-    console.warn();
-    return false;
-  }
+  // const typescriptFiles = globby(
+  //   ['**/*.(ts|tsx)', '!**/node_modules', '!**/*.d.ts'],
+  //   { cwd: paths.appSrc }
+  // );
+  // if (typescriptFiles.length > 0) {
+  //   console.warn(
+  //     chalk.yellow(
+  //       `We detected TypeScript in your project (${chalk.bold(
+  //         `src${path.sep}${typescriptFiles[0]}`
+  //       )}) and created a ${chalk.bold('tsconfig.json')} file for you.`
+  //     )
+  //   );
+  //   console.warn();
+  //   return false;
+  // }
   return true;
 }
 
@@ -156,7 +156,18 @@ function verifyTypeScriptSetup() {
           : 'react',
       reason: 'to support the new JSX transform in React 17',
     },
-    paths: { value: undefined, reason: 'aliased imports are not supported' },
+    paths: { value: {
+      "@api/*": ["./src/api/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@models/*": ["./src/models/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@store/*": ["./src/store/*"],
+      "@themes/*": ["./src/themes/*"],
+      "@utils/*": ["./src/utils/*"]
+    } },
   };
 
   const formatDiagnosticHost = {
@@ -251,14 +262,14 @@ function verifyTypeScriptSetup() {
   }
 
   // tsconfig will have the merged "include" and "exclude" by this point
-  if (parsedTsConfig.include == null) {
-    appTsConfig = immer(appTsConfig, config => {
-      config.include = ['src'];
-    });
-    messages.push(
-      `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
-    );
-  }
+  // if (parsedTsConfig.include == null) {
+  //   appTsConfig = immer(appTsConfig, config => {
+  //     config.include = ['src'];
+  //   });
+  //   messages.push(
+  //     `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
+  //   );
+  // }
 
   if (messages.length > 0) {
     if (firstTimeSetup) {
